@@ -1,7 +1,8 @@
-const {instrument} = require("@socket.io/admin-ui")
+// const {instrument} = require("@socket.io/admin-ui")
+
+const updateChatMessageURL = process.env.REACT_APP_GET_UPDATE_MESSAGES_URL || "http://localhost:5040/updateChatMessage";
 const io = require('socket.io')(5050, {
     cors: {
-        // origin: ["http://localhost:3000","https://admin.socket.io/"],
         origin: '*',
         methods: ["GET", "POST"]
     },
@@ -17,14 +18,14 @@ io.on('connection', socket => {
         delete from.id;
         socket.to(roomID).emit("receive_message", {from, time, text, roomID})
         
-        // fetch("http://localhost:5040/updateChatMessage", {
-        //     method: 'POST',
-        //     headers: {'Content-Type':'application/json'},
-        //     body: JSON.stringify({id, time, text, roomID})
-        // })
-        //     .then(res => res.json())
-        //     .then(data => console.log(data))
-        //     .catch(err => console.log(err))
+        fetch(updateChatMessageURL, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({id, time, text, roomID})
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
         
         
     })
@@ -35,4 +36,4 @@ io.on('connection', socket => {
     })
 })
 
-instrument(io, {auth:false,mode: "development"})
+// instrument(io, {auth:false,mode: "development"})
