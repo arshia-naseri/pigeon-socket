@@ -16,11 +16,9 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log("Connected id:", socket.id);
+  // console.log("Connected id:", socket.id);
 
   socket.on("send_message", (from, time, text, roomID) => {
-    let id = from.id;
-    delete from.id;
     socket.to(roomID).emit("receive_message", { from, time, text, roomID });
   });
 
